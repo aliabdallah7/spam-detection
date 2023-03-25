@@ -1,2 +1,2 @@
 # Spam Detection
-Predict if the receieved message is spam or not
+Predict if the received message is spam or not
