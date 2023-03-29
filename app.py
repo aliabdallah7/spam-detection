@@ -9,7 +9,6 @@ from PIL import Image
 image = Image.open('./img/spam.png')
 st.set_page_config(page_title='Spam Detection', page_icon=image)
 
-
 def load_lottie(url):
     r = requests.get(url)
     if r.status_code != 200:
