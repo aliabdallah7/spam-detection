@@ -83,15 +83,16 @@ with st.container():
 
         st.write('')
         st.write('')
+        st.write('')
         st.write('_For any issue contact me via :_')
-        # Add Link to your repo
+
         '''
+
             [![Github](https://skillicons.dev/icons?i=github)](https://github.com/aliabdallah7)
             &nbsp;&nbsp;
             [![LinkedIn](https://skillicons.dev/icons?i=linkedin)](https://www.linkedin.com/in/ali-abdallah7/)
             &nbsp;&nbsp;
             [![Gmail](https://img.icons8.com/color/70/gmail-new.png)](mailto:ali.abdallah43792@gmail.com)
-            &nbsp;
 
         '''
 
