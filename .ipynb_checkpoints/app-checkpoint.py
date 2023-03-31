@@ -12,6 +12,7 @@ import nltk
 import string
 nltk.download('stopwords')
 nltk.download('punkt')
+nltk.download('wordnet')
 
 image = Image.open('./img/spam.png')
 st.set_page_config(page_title='Spam Detection', page_icon=image)
