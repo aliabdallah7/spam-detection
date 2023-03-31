@@ -5,6 +5,11 @@ import joblib
 import numpy as np
 import requests
 from PIL import Image
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+from nltk.stem import PorterStemmer,WordNetLemmatizer
+import nltk
+import string
 
 image = Image.open('./img/spam.png')
 st.set_page_config(page_title='Spam Detection', page_icon=image)
@@ -16,26 +21,33 @@ def load_lottie(url):
     return r.json()
 
 
-# define a function to calculate the average word embedding for each row
-def get_mean_word_embedding(row, w2v_model):
-    words = row.split()
-    embeddings = []
-    for word in words:
-        if word in w2v_model.wv:
-            embeddings.append(w2v_model.wv[word])
-    if len(embeddings) > 0:
-        return np.mean(embeddings, axis=0)
-    else:
-        return np.zeros((100,))
-    
+# Initialize stemmer and lemmatizer
+stemmer = PorterStemmer()
+lemmatizer = WordNetLemmatizer()
+
+# Define function to preprocess text
+def preprocess_text(text):
+    # Convert to lowercase
+    text = text.lower()
+    # Remove punctuation
+    text = "".join([char for char in text if char not in string.punctuation])
+    # Remove stopwords
+    stop_words = set(stopwords.words('english'))
+    text = " ".join([word for word in text.split() if word not in stop_words])
+    # Tokenize
+    tokens = nltk.word_tokenize(text)
+    # Stem and lemmatize
+    stemmed_tokens = [stemmer.stem(token) for token in tokens]
+    lemmatized_tokens = [lemmatizer.lemmatize(token) for token in stemmed_tokens]
+    # Join tokens back into text string
+    preprocessed_text = " ".join(lemmatized_tokens)
+    return preprocessed_text
+
+
 
 # load the saved objects
 cv = pickle.load(open('count_vectorizer.pkl', 'rb'))
-
-model = joblib.load(open('spam_detection_model_LR','rb'))
-
-with open('word2vec.pkl', 'rb') as f:
-    w2v_model = pickle.load(f)
+model = joblib.load(open('model_NB','rb'))
 
 
 
@@ -49,27 +61,28 @@ with st.container():
     right_column, left_column = st.columns(2)
     with right_column:
         # Enter the message you want to classify
-        new_message = st.text_area('Enter your message :', height=250)
-    
+        new_message = st.text_area('Enter your message :', height=100)
+        
+        if st.button('Predict'):
+
+            # Doind preprocessing on the text I get
+            new_message = preprocess_text(new_message)
+
+            # transform the new message using the loaded CountVectorizer object
+            new_bow_features = cv.transform([new_message])
+
+            # Predict
+            result = model.predict(new_bow_features)
+
+            # Display
+            if result == 1:
+                st.error("Spam")
+            elif result == 0:
+                st.success("Ham 'Not Spam'")
+
     with left_column:
-        st_lottie(animation_spam, speed=1, height=250, key="secoend")
+        st_lottie(animation_spam, speed=0.5, height=250, key="secoend")
 
-if st.button('Predict'):
-
-    # transform the new message using the loaded CountVectorizer object
-    new_bow_features = cv.transform([new_message])
-    
-    # concatenate the bag-of-words features with the word embedding features
-    new_w2v_features = get_mean_word_embedding(new_message, w2v_model)
-    new_features = np.concatenate((new_bow_features.toarray(), np.expand_dims(new_w2v_features, axis=0)), axis=1)
-
-    # Predict
-    result = model.predict(new_features)
-    # Display
-    if result == 1:
-        st.error("Spam")
-    elif result == 0:
-        st.success("Ham 'Not Spam'")
 
 
 st.write('---')
