@@ -10,6 +10,8 @@ from nltk.tokenize import word_tokenize
 from nltk.stem import PorterStemmer,WordNetLemmatizer
 import nltk
 import string
+nltk.download('stopwords')
+
 
 image = Image.open('./img/spam.png')
 st.set_page_config(page_title='Spam Detection', page_icon=image)
