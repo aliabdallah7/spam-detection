@@ -14,6 +14,7 @@ nltk.download('stopwords')
 nltk.download('punkt')
 nltk.download('wordnet')
 
+
 image = Image.open('./img/spam.png')
 st.set_page_config(page_title='Spam Detection', page_icon=image)
 
@@ -41,10 +42,10 @@ def preprocess_text(text):
     # Tokenize
     tokens = nltk.word_tokenize(text)
     # Stem and lemmatize
-    stemmed_tokens = [stemmer.stem(token) for token in tokens]
-    lemmatized_tokens = [lemmatizer.lemmatize(token) for token in stemmed_tokens]
+    lemmatized_tokens = [lemmatizer.lemmatize(token) for token in tokens]
+    stemmed_tokens = [stemmer.stem(token) for token in lemmatized_tokens]
     # Join tokens back into text string
-    preprocessed_text = " ".join(lemmatized_tokens)
+    preprocessed_text = " ".join(stemmed_tokens)
     return preprocessed_text
 
 
