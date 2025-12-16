@@ -10,9 +10,25 @@ from nltk.tokenize import word_tokenize
 from nltk.stem import PorterStemmer,WordNetLemmatizer
 import nltk
 import string
-nltk.download('stopwords')
-nltk.download('punkt')
-nltk.download('wordnet')
+@st.cache_resource
+def download_nltk_resources():
+    try:
+        nltk.data.find('tokenizers/punkt')
+    except LookupError:
+        nltk.download('punkt')
+
+    try:
+        nltk.data.find('corpora/stopwords')
+    except LookupError:
+        nltk.download('stopwords')
+
+    try:
+        nltk.data.find('corpora/wordnet')
+    except LookupError:
+        nltk.download('wordnet')
+
+download_nltk_resources()
+
 
 
 image = Image.open('./img/spam.png')
