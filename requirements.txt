@@ -9,3 +9,4 @@ seaborn
 Pillow
 requests
 streamlit-lottie
+nltk
