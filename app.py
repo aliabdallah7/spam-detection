@@ -13,9 +13,9 @@ import string
 @st.cache_resource
 def download_nltk_resources():
     try:
-        nltk.data.find('tokenizers/punkt')
+        nltk.data.find('tokenizers/punkt_tab')
     except LookupError:
-        nltk.download('punkt')
+        nltk.download('punkt_tab')
 
     try:
         nltk.data.find('corpora/stopwords')
